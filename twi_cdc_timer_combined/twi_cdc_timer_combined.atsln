@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "twi_cdc_timer_combined", "twi_cdc_timer_combined\twi_cdc_timer_combined.cproj", "{71BFEDA3-4BC8-4BCF-9026-335576C9E335}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71BFEDA3-4BC8-4BCF-9026-335576C9E335}.Debug|AVR.ActiveCfg = Debug|AVR
+		{71BFEDA3-4BC8-4BCF-9026-335576C9E335}.Debug|AVR.Build.0 = Debug|AVR
+		{71BFEDA3-4BC8-4BCF-9026-335576C9E335}.Release|AVR.ActiveCfg = Release|AVR
+		{71BFEDA3-4BC8-4BCF-9026-335576C9E335}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
