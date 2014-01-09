@@ -5,7 +5,7 @@
  *  Author: Haichen Shen
  */
 
-#include "twi_cdc_timer.h" 
+#include "twi_cdc_timer.h"
 
 void init_buffer(imu_data_buffer *buffer)
 {
