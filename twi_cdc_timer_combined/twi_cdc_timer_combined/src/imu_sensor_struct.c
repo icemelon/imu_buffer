@@ -10,8 +10,8 @@
 //initialize struct values
 void init_sensor_struct(sensor *sen)
 {
-	sen->appID = 0;
-	sen->notificationID = 0;
+	sen->appID = 4;
+	sen->notificationID = 4;
 	sen->taskID = 0;
 	sen->persistent = 0; //continue after numSamples are done
 	sen->sampleRate = 0; //rate of sampling

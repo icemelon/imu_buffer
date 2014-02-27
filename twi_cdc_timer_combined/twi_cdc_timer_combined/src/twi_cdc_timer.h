@@ -10,6 +10,7 @@
 
 #include <asf.h>
 #include <stdio.h>
+#include <adc.h>
 
 //twi addresses for working with the imu
 #define TWI_MASTER       TWIC
@@ -44,40 +45,53 @@ typedef struct sensor_struct
 	working_state state;
 } sensor;
 
+typedef struct data_buffer_struct
+{
+	void *data;
+	int16_t capacity;
+	int16_t write_pt;
+	int16_t read_pt;
+	int16_t min;
+	int16_t max;
+} data_buffer;
+
 /////////////////////////////////////////////
 ///////////////  IMU STRUCTS  ///////////////
 /////////////////////////////////////////////
 
-//imu struct that holds data values
-typedef struct imu_data_struct
+//imu struct that holds data values for orientation
+typedef struct gyro_data_struct
 {
 	int16_t gyro_x;
 	int16_t gyro_y;
 	int16_t gyro_z;
+} gyro_data;
+
+//imu struct that holds data values for temperature
+typedef struct temp_data_struct
+{
 	int16_t temp;
+} temp_data;
+
+//imu struct that holds data values for acceleration
+typedef struct accel_data_struct
+{
 	int16_t accel_x;
 	int16_t accel_y;
 	int16_t accel_z;
-} imu_data;
-
-typedef struct imu_data_buffer_struct
-{
-	imu_data *data;
-	int16_t capacity;
-	int16_t write_pt;
-	int16_t read_pt;
-} imu_data_buffer;
+} accel_data;
 
 /////////////////////////////////////////////
 ///////////////  MIC STRUCTS  ///////////////
 /////////////////////////////////////////////
 
-//mic struct that holds data values
-typedef struct mic_data_struct
+//mic struct that holds data values for volume
+typedef struct vol_data_struct
 {
-	int16_t sample;
-} mic_data;
+	int16_t vol_sample;
+} vol_data;
 
+/*
 typedef struct mic_data_buffer_struct
 {
 	mic_data *data;
@@ -85,22 +99,26 @@ typedef struct mic_data_buffer_struct
 	int16_t write_pt;
 	int16_t read_pt;
 } mic_data_buffer;
-
+*/
 /***********************************************************************************
 FUNCTION DECLARATIONS
 ***********************************************************************************/
 void init_sensor_struct(sensor *imu);
 void reset_sensor_struct(sensor *imu);
 
-void init_buffer(imu_data_buffer *buffer);
-void reset_buffer(imu_data_buffer *buffer);
-int16_t buffer_size(imu_data_buffer *buffer);
+void init_gyro_buffer(data_buffer *buffer);
+void init_temp_buffer(data_buffer *buffer);
+void init_accel_buffer(data_buffer *buffer);
+void init_vol_buffer(data_buffer *buffer);
+void reset_buffer(data_buffer *buffer);
+int16_t buffer_size(data_buffer *buffer);
 
 void twi_init(void);
 void imu_write_reg(void);
-void imu_read(imu_data *data);
-void set_sensor_idle(void);
-void send_back_data(void);
+void imu_read(data_buffer *buffer, int sensor_num);
+void mic_read(vol_data *data);
+void set_sensor_idle(sensor *sen);
+void send_back_data(data_buffer *buffer, int sensor_num);
 
 void sendCommand(uint8_t in_appID, uint8_t in_noteID);
 void cancelCommand(uint8_t in_appID, uint8_t in_noteID);

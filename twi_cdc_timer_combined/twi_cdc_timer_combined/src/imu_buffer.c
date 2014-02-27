@@ -7,21 +7,45 @@
 
 #include "twi_cdc_timer.h"
 
-void init_buffer(imu_data_buffer *buffer)
+void init_gyro_buffer(data_buffer *buffer)
 {
-	buffer->data = malloc(BUFFER_CAPACITY * sizeof(imu_data));
+	buffer->data = malloc(BUFFER_CAPACITY * sizeof(gyro_data));
 	buffer->capacity = BUFFER_CAPACITY;
 	buffer->read_pt = 0;
 	buffer->write_pt = 0;
 }
 
-void reset_buffer(imu_data_buffer *buffer)
+void init_temp_buffer(data_buffer *buffer)
+{
+	buffer->data = malloc(BUFFER_CAPACITY * sizeof(temp_data));
+	buffer->capacity = BUFFER_CAPACITY;
+	buffer->read_pt = 0;
+	buffer->write_pt = 0;
+}
+
+void init_accel_buffer(data_buffer *buffer)
+{
+	buffer->data = malloc(BUFFER_CAPACITY * sizeof(accel_data));
+	buffer->capacity = BUFFER_CAPACITY;
+	buffer->read_pt = 0;
+	buffer->write_pt = 0;
+}
+
+void init_vol_buffer(data_buffer *buffer)
+{
+	buffer->data = malloc(BUFFER_CAPACITY * sizeof(vol_data));
+	buffer->capacity = BUFFER_CAPACITY;
+	buffer->read_pt = 0;
+	buffer->write_pt = 0;
+}
+
+void reset_buffer(data_buffer *buffer)
 {
 	buffer->read_pt = 0;
 	buffer->write_pt = 0;
 }
 
-int16_t buffer_size(imu_data_buffer *buffer)
+int16_t buffer_size(data_buffer *buffer)
 {
 	int16_t size = buffer->write_pt - buffer->read_pt;
 	if (size < 0)
