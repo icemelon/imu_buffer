@@ -1,7 +1,7 @@
 /******************************************************************************
  * FILE NAME : twi_cdc_timer.h
  * DESCRIPTION : header file for the sensor phone interface buffering system
- * AUTHORS : Eric Yuan
+ * AUTHORS : Eric Yuan, Ryan Tsoi
  * DATE : 8/14/2013 7:53:27 PM
  ****************************************************************************/
 
@@ -10,6 +10,7 @@
 
 #include <asf.h>
 #include <stdio.h>
+#include <adc.h>
 
 //twi addresses for working with the imu
 #define TWI_MASTER       TWIC
@@ -24,26 +25,15 @@
 
 //#define DEBUG
 
-//imu struct that holds data values
-typedef struct imu_data_struct
+typedef enum enum_working_state
 {
-	int16_t accel_x;
-	int16_t accel_y;
-	int16_t accel_z;
-	int16_t temp;
-	int16_t gyro_x;
-	int16_t gyro_y;
-	int16_t gyro_z;
-} imu_data;
-
-typedef enum enum_working_state {
 	IDLE = 0,
 	BUFFER_ONCE,
 	BUFFER_PERSIST,
 } working_state;
 
 //imu general struct to store cell info
-typedef struct imu_sensor_struct
+typedef struct sensor_struct
 {
 	char appID;
 	char notificationID;
@@ -53,28 +43,85 @@ typedef struct imu_sensor_struct
 	uint16_t numSamples; //num of samples before CPU is woken up
 	int16_t rateCntr;
 	working_state state;
-} imu_struct;
+} sensor;
 
-typedef struct imu_data_buffer {
-	imu_data *data;
+typedef struct data_buffer_struct
+{
+	void *data;
 	int16_t capacity;
 	int16_t write_pt;
 	int16_t read_pt;
-} imu_data_buffer;
+	int16_t min;
+	int16_t max;
+} data_buffer;
 
+/////////////////////////////////////////////
+///////////////  IMU STRUCTS  ///////////////
+/////////////////////////////////////////////
+
+//imu struct that holds data values for orientation
+typedef struct gyro_data_struct
+{
+	int16_t gyro_x;
+	int16_t gyro_y;
+	int16_t gyro_z;
+} gyro_data;
+
+//imu struct that holds data values for temperature
+typedef struct temp_data_struct
+{
+	int16_t temp;
+} temp_data;
+
+//imu struct that holds data values for acceleration
+typedef struct accel_data_struct
+{
+	int16_t accel_x;
+	int16_t accel_y;
+	int16_t accel_z;
+} accel_data;
+
+/////////////////////////////////////////////
+///////////////  MIC STRUCTS  ///////////////
+/////////////////////////////////////////////
+
+//mic struct that holds data values for volume
+typedef struct vol_data_struct
+{
+	int16_t vol_sample;
+} vol_data;
+
+/*
+typedef struct mic_data_buffer_struct
+{
+	mic_data *data;
+	int16_t capacity;
+	int16_t write_pt;
+	int16_t read_pt;
+} mic_data_buffer;
+*/
 /***********************************************************************************
 FUNCTION DECLARATIONS
 ***********************************************************************************/
-void init_sensor_struct(imu_struct *imu);
-void reset_sensor_struct(imu_struct *imu);
+void init_sensor_struct(sensor *imu);
+void reset_sensor_struct(sensor *imu);
 
-void init_buffer(imu_data_buffer *buffer);
-void reset_buffer(imu_data_buffer *buffer);
-int16_t buffer_size(imu_data_buffer *buffer);
+void init_gyro_buffer(data_buffer *buffer);
+void init_temp_buffer(data_buffer *buffer);
+void init_accel_buffer(data_buffer *buffer);
+void init_vol_buffer(data_buffer *buffer);
+void reset_buffer(data_buffer *buffer);
+int16_t buffer_size(data_buffer *buffer);
 
-void twi_init();
-void mpu6050_write_reg();
-void mpu6050_read(imu_data *data);
-void cancel();
+void twi_init(void);
+void imu_write_reg(void);
+void imu_read(data_buffer *buffer, int sensor_num);
+void mic_read(vol_data *data);
+void set_sensor_idle(sensor *sen);
+void send_back_data(data_buffer *buffer, int sensor_num);
+
+void sendCommand(uint8_t in_appID, uint8_t in_noteID);
+void cancelCommand(uint8_t in_appID, uint8_t in_noteID);
+void bufferCommand(uint8_t in_appID, uint8_t in_noteID, uint8_t in_taskID);
 
 #endif /* TWI_CDC_TIMER_H_ */
